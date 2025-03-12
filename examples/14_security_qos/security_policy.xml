@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policy version="0.2.0">
+  <enclaves>
+    <enclave path="/security_demo/secure_talker">
+      <profiles>
+        <profile ns="/" node="talker">
+          <topics publish="ALLOW" subscribe="ALLOW">
+            <topic>secure_chatter</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+    <enclave path="/security_demo/secure_listener">
+      <profiles>
+        <profile ns="/" node="listener">
+          <topics publish="DENY" subscribe="ALLOW">
+            <topic>secure_chatter</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+  </enclaves>
+</policy>

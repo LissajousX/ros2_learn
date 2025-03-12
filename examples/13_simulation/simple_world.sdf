@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="simple_world">
+    <!-- 添加光源 -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    
+    <!-- 添加地面 -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    
+    <!-- 物理引擎设置 -->
+    <physics type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    
+    <!-- 添加一些障碍物 -->
+    <model name="box1">
+      <pose>2 2 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <static>true</static>
+    </model>
+    
+    <model name="box2">
+      <pose>-2 -2 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 1 0 1</ambient>
+            <diffuse>0 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <static>true</static>
+    </model>
+    
+    <model name="cylinder1">
+      <pose>-3 2 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0 0 1 1</ambient>
+            <diffuse>0 0 1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <static>true</static>
+    </model>
+    
+    <model name="sphere1">
+      <pose>3 -3 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <sphere>
+              <radius>0.5</radius>
+            </sphere>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.5</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <static>true</static>
+    </model>
+    
+    <!-- 添加一面墙 -->
+    <model name="wall">
+      <pose>0 4 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>8 0.2 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>8 0.2 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <static>true</static>
+    </model>
+  </world>
+</sdf>

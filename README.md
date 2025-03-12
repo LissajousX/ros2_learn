@@ -9,8 +9,6 @@
 
 ## 学习大纲
 
-### 已完成的学习内容
-
 1. ROS2基础
 2. 话题通信（Topics）
 3. 服务通信（Services）
@@ -23,9 +21,6 @@
 10. 消息过滤器（Message Filters）
 11. 导航栈（Navigation Stack）
 12. 可视化工具（Visualization）
-
-### 待学习内容
-
 13. 仿真集成（Simulation）
 14. 安全和QoS（Security & QoS）
 15. 多机器人系统（Multi-robot Systems）

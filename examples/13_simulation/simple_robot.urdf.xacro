@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="simple_robot">
+
+  <!-- 定义机器人尺寸参数 -->
+  <xacro:property name="base_length" value="0.5"/>
+  <xacro:property name="base_width" value="0.3"/>
+  <xacro:property name="base_height" value="0.15"/>
+  <xacro:property name="wheel_radius" value="0.1"/>
+  <xacro:property name="wheel_width" value="0.05"/>
+  <xacro:property name="wheel_separation" value="0.4"/>
+  <xacro:property name="caster_radius" value="0.05"/>
+  
+  <!-- 定义颜色 -->
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+  
+  <material name="black">
+    <color rgba="0 0 0 1"/>
+  </material>
+  
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+  
+  <!-- 基座链接 -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="5.0"/>
+      <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+  </link>
+  
+  <!-- 右轮链接 -->
+  <link name="right_wheel">
+    <visual>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+  </link>
+  
+  <!-- 左轮链接 -->
+  <link name="left_wheel">
+    <visual>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+  </link>
+  
+  <!-- 前万向轮链接 -->
+  <link name="front_caster">
+    <visual>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  
+  <!-- 激光雷达链接 -->
+  <link name="lidar_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  
+  <!-- 相机链接 -->
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="0.05 0.1 0.05"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.05 0.1 0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  
+  <!-- 右轮关节 -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin xyz="0 -${wheel_separation/2} 0" rpy="${pi/2} 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  
+  <!-- 左轮关节 -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin xyz="0 ${wheel_separation/2} 0" rpy="${pi/2} 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  
+  <!-- 前万向轮关节 -->
+  <joint name="front_caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="front_caster"/>
+    <origin xyz="${base_length/3} 0 -${base_height/2}"/>
+  </joint>
+  
+  <!-- 激光雷达关节 -->
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="0 0 ${base_height/2 + 0.05/2}"/>
+  </joint>
+  
+  <!-- 相机关节 -->
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="${base_length/2 - 0.05/2} 0 ${base_height/2}"/>
+  </joint>
+  
+  <!-- 差速驱动插件 -->
+  <gazebo>
+    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+      <ros>
+        <namespace>/simple_robot</namespace>
+      </ros>
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>${wheel_separation}</wheel_separation>
+      <wheel_diameter>${wheel_radius * 2}</wheel_diameter>
+      <max_wheel_torque>20</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>true</publish_wheel_tf>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+    </plugin>
+  </gazebo>
+  
+  <!-- 激光雷达插件 -->
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="lidar_controller" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <namespace>/simple_robot</namespace>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>lidar_link</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+  
+  <!-- 相机插件 -->
+  <gazebo reference="camera_link">
+    <sensor name="camera" type="camera">
+      <pose>0 0 0 0 0 0</pose>
+      <camera>
+        <horizontal_fov>1.047</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>100</far>
+        </clip>
+      </camera>
+      <update_rate>30</update_rate>
+      <visualize>true</visualize>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <ros>
+          <namespace>/simple_robot</namespace>
+          <remapping>image_raw:=image</remapping>
+          <remapping>camera_info:=camera_info</remapping>
+        </ros>
+        <frame_name>camera_link</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+  
+  <!-- 设置材质颜色 -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  
+  <gazebo reference="left_wheel">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  
+  <gazebo reference="right_wheel">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  
+  <gazebo reference="front_caster">
+    <material>Gazebo/White</material>
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+  </gazebo>
+  
+  <gazebo reference="lidar_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  
+  <gazebo reference="camera_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  
+</robot>
